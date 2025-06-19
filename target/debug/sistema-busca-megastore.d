@@ -1,1 +1,1 @@
-C:\Users\gamer\sistema-busca-megastore\target\debug\sistema-busca-megastore.exe: C:\Users\gamer\sistema-busca-megastore\src\main.rs
+/workspaces/sistema-busca-megastore/target/debug/sistema-busca-megastore: /workspaces/sistema-busca-megastore/src/lib.rs /workspaces/sistema-busca-megastore/src/main.rs /workspaces/sistema-busca-megastore/src/modelo.rs

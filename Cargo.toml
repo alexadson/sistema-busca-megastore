@@ -1,9 +1,4 @@
 [package]
-name = "sistema-busca-megastore_index"
+name = "sistema-busca-megastore"
 version = "0.1.0"
 edition = "2021"
-
-[dependencies]
-csv = "1.1"
-serde = { version = "1.0", features = ["derive"] }
-

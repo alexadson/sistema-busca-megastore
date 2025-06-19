@@ -1,39 +1,41 @@
-mod modelo;
-mod indice;
-mod util;
-
-use modelo::produto::Produto;
-use indice::construtor::construir_indice;
-use indice::buscador::buscar;
-use util::texto::tokenizar;
-use std::fs::File;
-use csv::Reader;
+use sistema_busca_megastore::{buscar_produtos, modelo::Produto};
+use std::io;
 
 fn main() {
-    let caminho = "dados/produtos.csv";
-    let mut produtos: Vec<Produto> = Vec::new();
+    // Catálogo estático com alguns produtos
+    let catalogo = vec![
+        Produto {
+            nome: "Camiseta Azul".into(),
+            marca: "Nike".into(),
+            categoria: "Roupas".into(),
+        },
+        Produto {
+            nome: "Tênis Runner".into(),
+            marca: "Adidas".into(),
+            categoria: "Calçados".into(),
+        },
+        Produto {
+            nome: "Notebook Z3".into(),
+            marca: "TechX".into(),
+            categoria: "Eletrônicos".into(),
+        },
+    ];
 
-    let arquivo = File::open(caminho).expect("Erro ao abrir o arquivo CSV.");
-    let mut leitor = Reader::from_reader(arquivo);
-
-    for resultado in leitor.deserialize() {
-        let produto: Produto = resultado.expect("Erro ao ler produto.");
-        produtos.push(produto);
-    }
-
-    let indice = construir_indice(&produtos);
-
-    println!("Digite um termo de busca:");
+    // Lê o termo de busca do usuário
+    println!("Digite um termo para buscar (nome, marca ou categoria): ");
     let mut entrada = String::new();
-    std::io::stdin().read_line(&mut entrada).unwrap();
-    let termos = tokenizar(&entrada);
+    io::stdin().read_line(&mut entrada).expect("Erro ao ler entrada");
+    let termo = entrada.trim();
 
-    let ids = buscar(&indice, &termos);
+    // Chama a função de busca
+    let resultados = buscar_produtos(&catalogo, termo);
 
-    println!("Resultados:");
-    for id in ids {
-        if let Some(p) = produtos.iter().find(|p| p.id == id) {
-            println!("{} - {}", p.id, p.nome);
+    if resultados.is_empty() {
+        println!("Nenhum produto encontrado para '{}'.", termo);
+    } else {
+        println!("Produtos encontrados:");
+        for produto in resultados {
+            println!("- {} | {} | {}", produto.nome, produto.marca, produto.categoria);
         }
     }
 }
